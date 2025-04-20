@@ -1,1 +1,1 @@
-from src.azurex.cosmos import cosmos_service
+from src.azurex.cosmos import CosmosCRUDService

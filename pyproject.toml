@@ -1,8 +1,9 @@
 [project]
 name = "AzureX"
 version = "0.0.1"
-authors = [{ name = "Raval Sahil", email = "ravalsahil1311@gmail.com" }]
-description = "A small example package"
+maintainers = [{ name = "Raval Sahil", email = "ravalsahil1311@gmail.com" }]
+dependencies = []
+description = "AzureX is a Python library that provides a simple and efficient way to interact with Azure services."
 readme = "README.md"
 requires-python = ">=3.11"
 classifiers = [
