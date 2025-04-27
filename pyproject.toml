@@ -2,7 +2,7 @@
 name = "AzureX"
 version = "0.0.1"
 maintainers = [{ name = "Raval Sahil", email = "ravalsahil1311@gmail.com" }]
-dependencies = []
+dependencies = ["azure-cosmos>=4.9.0", "python-dotenv>=1.1.0"]
 description = "AzureX is a Python library that provides a simple and efficient way to interact with Azure services."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -14,5 +14,5 @@ license = "MIT"
 license-files = ["LICEN[CS]E*"]
 
 [project.urls]
-Homepage = "https://github.com/AzureEase/AzureX"
-Issues = "https://github.com/AzureEase/AzureX/issues"
+Homepage = "https://github.com/NeuroSynthesizer/AzureX"
+Issues = "https://github.com/NeuroSynthesizer/AzureX/issues"
