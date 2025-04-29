@@ -20,15 +20,15 @@ class CosmosCRUDService:
         self.database_name = database_name
         self.partition_key_path = partition_key
         self.container_name = container_name
-        self.client, self.db, self.container = self._get_database_clients()
         if isinstance(self.partition_key_path, str):
             self.partition_key = PartitionKey(path=self.partition_key_path, kind="Hash")
-        elif isinstance(self.partition_key, list):
+        elif isinstance(self.partition_key_path, list):
             self.partition_key = PartitionKey(
                 path=self.partition_key_path, kind="MultiHash"
             )
         else:
-            raise TypeError("partition_key_path must be str or list of str.")
+            raise TypeError("partition key path must be str or list of str.")
+        self.client, self.db, self.container = self._get_database_clients()
 
     def _get_database_clients(self):
         """It is Private method to get the database clients."""
@@ -49,9 +49,9 @@ class CosmosCRUDService:
     def create_item(self, item: Dict) -> str:
         """Create an item in the container.
         ## Parameters:
-            item (dict): The SQL-like query to execute.
+            item (dict): Item to insert into the container.
         ## Returns:
-            list: A list of items matching the query.
+            str: Item Created Successfully.
         """
         try:
             self.container.create_item(body=item)
@@ -84,7 +84,7 @@ class CosmosCRUDService:
             item_id (str): The ID of the item to update.
             updated_item (dict): The updated item data.
         ## Returns:
-            str: A message indicating the result of the operation.
+            dict: returns updated Item dictionary.
         """
         try:
             item = self.container.read_item(
@@ -92,7 +92,7 @@ class CosmosCRUDService:
             )
             for key, value in updated_item.items():
                 item[key] = value
-            self.container.replace_item(body=updated_item)
+            item = self.container.replace_item(body=updated_item)
         except Exception as e:
             print(f"Error updating item: {e}")
             raise e
@@ -103,7 +103,7 @@ class CosmosCRUDService:
         ## Parameters:
             item_id (str): The ID of the item to delete.
         ## Returns:
-            str: A message indicating the result of the operation.
+            str: A message indicating that delete operation is successfull or not.
         """
         try:
             self.container.delete_item(
@@ -115,6 +115,7 @@ class CosmosCRUDService:
         return "Item Deleted Successfully"
 
     def __str__(self):
-        return "CosmosCRUDService(database_name={}, container_name={})".format(
-            self.database_name, self.container_name
+        """String representation of the CosmosCRUDService class."""
+        return "CosmosCRUDService(database_name={}, container_name={},partition_key_path={})".format(
+            self.database_name, self.container_name, self.partition_key_path
         )
