@@ -15,7 +15,25 @@ def test_create_item():
         }
     )
 
-    assert item1 == "Item Created Successfully"
+    assert item1 in ["Item Created Successfully", "Item already exists"]
+
+
+def test_query_items():
+    query = "SELECT * FROM C"
+    items = cosmos_service.query_items(query=query)
+    assert isinstance(items, list)
+
+
+def test_update_item():
+    updated_item = {
+        "id": "1",
+        "partition_key1": "value1",
+        "partition_key2": "value2",
+        "TestKey": "NewTestValue",
+        "TempKey": "TempValue",
+    }
+    item = cosmos_service.update_item(item_id="1", updated_item=updated_item)
+    assert isinstance(item, dict)
 
 
 def test_str_representation():

@@ -51,10 +51,14 @@ class CosmosCRUDService:
         ## Parameters:
             item (dict): Item to insert into the container.
         ## Returns:
-            str: Item Created Successfully.
+            str: Item Created Successfully or item already exists.
         """
         try:
             self.container.create_item(body=item)
+
+        except exceptions.CosmosResourceExistsError as e:
+            print(f"Item already exists: {e}")
+            return "Item already exists"
         except Exception as e:
             print(f"Error creating item: {e}")
             raise e
@@ -87,12 +91,7 @@ class CosmosCRUDService:
             dict: returns updated Item dictionary.
         """
         try:
-            item = self.container.read_item(
-                item=item_id, partition_key=self.partition_key_path
-            )
-            for key, value in updated_item.items():
-                item[key] = value
-            item = self.container.replace_item(body=updated_item)
+            item = self.container.replace_item(item=item_id, body=updated_item)
         except Exception as e:
             print(f"Error updating item: {e}")
             raise e
