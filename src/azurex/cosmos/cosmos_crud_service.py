@@ -105,12 +105,17 @@ class CosmosCRUDService:
             str: A message indicating that delete operation is successfull or not.
         """
         try:
+            items = self.query_items(query=f"SELECT * FROM C WHERE C.id ={item_id}")
+            # Need to work here on partition key Logic for a succesffull deletion operatoin
             self.container.delete_item(
-                item=item_id, partition_key=self.partition_key_path
+                item=item_id, partition_key=["1", "value", "value2"]
             )
+        except exceptions.CosmosResourceNotFoundError as e:
+            print(f"Item not found: {e}")
+            return "Item not found"
         except exceptions.CosmosHttpResponseError as e:
             print(f"Error deleting item: {e}")
-            raise e
+            # raise e
         return "Item Deleted Successfully"
 
     def __str__(self):

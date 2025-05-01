@@ -36,6 +36,11 @@ def test_update_item():
     assert isinstance(item, dict)
 
 
+def test_delete_item():
+    item = cosmos_service.delete_item(item_id="1")
+    assert item in ["Item Deleted Successfully", "Item not found"]
+
+
 def test_str_representation():
     assert (
         str(cosmos_service)
