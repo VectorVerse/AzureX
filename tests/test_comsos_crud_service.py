@@ -41,6 +41,20 @@ def test_delete_item():
     assert item in ["Item Deleted Successfully", "Item not found"]
 
 
+def test_delete_item_with_partition_keys():
+    result = cosmos_service.create_item(
+        item={
+            "id": "2",
+            "partition_key1": "value1",
+            "partition_key2": "value2",
+            "TestKey": "TestValue",
+        }
+    )
+    assert result == "Item Created Successfully" or "Item already exists"
+    item = cosmos_service.delete_item(item_id="2")
+    assert item in ["Item Deleted Successfully", "Item not found"]
+
+
 def test_str_representation():
     assert (
         str(cosmos_service)

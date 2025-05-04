@@ -5,14 +5,20 @@ The Service class for CRUD operations on Azure Cosmos DB.
 import os
 
 from azure.cosmos import CosmosClient, PartitionKey, exceptions
-from typing import List, Dict, Union
+from typing import List, Dict, Union, Any, Optional
 from dotenv import load_dotenv
 
 load_dotenv()
 
 
 class CosmosCRUDService:
-    """The class CosmosCRUDService is a wrapper for Azure Cosmos DB which provides CRUD operations."""
+    """The class CosmosCRUDService is a wrapper for Azure Cosmos DB which provides CRUD operations.Set your Azure Cosmos DB connection string in the environment variable AZURE_COSMOS_CONNECTION_STRING.
+
+    ## Parameters:
+        database_name (str): Provide the database name you want to create.
+        partition_key (Union[str,List]): Provide the partiion key to create in the container.
+        container_name (str): The name of the container You want to create.
+    """
 
     def __init__(
         self, database_name: str, partition_key: Union[str, List], container_name: str
@@ -97,19 +103,28 @@ class CosmosCRUDService:
             raise e
         return item
 
-    def delete_item(self, item_id: str) -> str:
+    def delete_item(
+        self, item_id: str, partition_key_values: Optional[Any] = None
+    ) -> str:
         """Delete an item in the container.
         ## Parameters:
             item_id (str): The ID of the item to delete.
+            partition_key_values (Optional[Any]): provide the values of partition key.
         ## Returns:
             str: A message indicating that delete operation is successfull or not.
         """
         try:
-            items = self.query_items(query=f"SELECT * FROM C WHERE C.id ={item_id}")
-            # Need to work here on partition key Logic for a succesffull deletion operatoin
-            self.container.delete_item(
-                item=item_id, partition_key=["1", "value", "value2"]
-            )
+            items = self.query_items(query=f"SELECT * FROM C WHERE C.id ='{item_id}'")
+            if not items:
+                return "Item not found"
+            if partition_key_values is None:
+                properties = self.container.read()
+                if properties["partitionKey"]["paths"]:
+                    partition_key = properties["partitionKey"]["paths"]
+                partition_key_values = [
+                    items[0].get(key.strip("/")) for key in partition_key
+                ]
+            self.container.delete_item(item=item_id, partition_key=partition_key_values)
         except exceptions.CosmosResourceNotFoundError as e:
             print(f"Item not found: {e}")
             return "Item not found"
