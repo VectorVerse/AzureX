@@ -17,7 +17,7 @@ Use a feature or fix-specific branch name. **Always branch from `development`.**
 ```bash
 git checkout development
 git pull
-git checkout -b feature/your-feature-name
+git checkout -b feature/your-github-username/your-feature-name
 ```
 
 ### 3. Write Clean Code
