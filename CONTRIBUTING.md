@@ -17,7 +17,7 @@ Use a feature or fix-specific branch name. **Always branch from `development`.**
 ```bash
 git checkout development
 git pull
-git checkout -b feature/your-feature-name
+git checkout -b feature/your-github-username/your-feature-name
 ```
 
 ### 3. Write Clean Code
@@ -64,14 +64,47 @@ This project follows the **GitFlow workflow**:
 
 To maintain consistency in the codebase, please follow these naming conventions:
 
-- **snake_case** (`snake_case`):  
-  - Used for **variables**, **functions**, and **methods**.
+---
 
-- **PascalCase** (`PascalCase`):  
-  - Used for **class names**.
+### 🐍 **snake_case**  
+Used for **variables**, **functions**, and **methods**.
 
-- **UPPERCASE** (`UPPERCASE`):  
-  - Used for **constants**.
+```python
+# variable
+user_name = "Alice"
+
+# function
+def get_user_data():
+    return {"name": "Alice", "age": 30}
+
+# method inside a class
+class User:
+    def get_full_name(self):
+        return "Alice Johnson"
+```
+
+---
+
+### 🏛 **PascalCase**  
+Used for **class names**.
+
+```python
+class UserProfile:
+    def __init__(self, name):
+        self.name = name
+```
+
+---
+
+### 🔠 **UPPERCASE**  
+Used for **constants**.
+
+```python
+PI = 3.14159
+MAX_USERS = 100
+DEFAULT_TIMEOUT = 30
+```
+
 
 ---
 
