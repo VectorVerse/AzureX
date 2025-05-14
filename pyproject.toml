@@ -1,6 +1,6 @@
 [project]
 name = "AzureX"
-version = "0.0.1"
+version = "0.0.2a1"
 maintainers = [{ name = "Raval Sahil", email = "ravalsahil1311@gmail.com" }]
 authors = [{ name = "Raval Sahil", email = "ravalsahil1311@gmail.com" }]
 dependencies = [
