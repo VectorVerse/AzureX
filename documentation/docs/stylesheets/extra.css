@@ -1,0 +1,17 @@
+[data-md-color-scheme="default"] {
+    --md-primary-fg-color: #0078D4;
+    /* Azure Blue */
+    --md-primary-fg-color--light: #2899f5;
+    /* Lighter Azure Blue */
+    --md-primary-fg-color--dark: #005a9e;
+    /* Darker Azure Blue */
+}
+
+[data-md-color-scheme="slate"] {
+    --md-primary-fg-color: #00A4EF;
+    /* Alternate Azure Blue (Fluent UI) */
+    --md-primary-fg-color--light: #40C4FF;
+    /* Light cyan-blue */
+    --md-primary-fg-color--dark: #007ACC;
+    /* Darker Fluent variant */
+}

@@ -1,0 +1,32 @@
+site_name: AzureX Documentation
+site_url: https://vectorverse.github.io/AzureX/
+
+theme:
+  name: material
+  features:
+    - content.code.copy
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to dark mode
+    - scheme: slate
+      toggle:
+        icon: material/weather-night
+        name: Switch to light mode
+  icon:
+    logo: material/cloud
+    admonition:
+      note: octicons/tag-16
+      tip: octicons/squirrel-16
+      important: octicons/zap-16
+      warning: octicons/alert-16
+      caution: octicons/info-16
+
+extra_css:
+  - stylesheets/extra.css
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
