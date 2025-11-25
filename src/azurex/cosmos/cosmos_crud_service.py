@@ -6,7 +6,12 @@ import os
 
 from azure.cosmos import CosmosClient, PartitionKey, exceptions
 from typing import List, Dict, Union, Any, Optional
+from pydantic import SecretStr
 from dotenv import load_dotenv
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 
@@ -21,11 +26,26 @@ class CosmosCRUDService:
     """
 
     def __init__(
-        self, database_name: str, partition_key: Union[str, List], container_name: str
+        self,
+        conn_str: Optional[SecretStr],
+        api_key: Optional[SecretStr],
+        endpoint: Optional[SecretStr],
+        database_name: str,
+        partition_key: Union[str, List[str]],
+        container_name: str,
     ):
+        self.conn_str = conn_str
+        self.api_key = api_key
+        self.endpoint = endpoint
         self.database_name = database_name
         self.partition_key_path = partition_key
         self.container_name = container_name
+
+        if not self.database_name:
+            raise ValueError("database_name must be provided and non-emtpy")
+        if not self.container_name:
+            raise ValueError("container_name must be provided and non-emtpy")
+
         if isinstance(self.partition_key_path, str):
             self.partition_key = PartitionKey(path=self.partition_key_path, kind="Hash")
         elif isinstance(self.partition_key_path, list):
@@ -36,12 +56,41 @@ class CosmosCRUDService:
             raise TypeError("partition key path must be str or list of str.")
         self.client, self.db, self.container = self._get_database_clients()
 
+    def _unwrap_secret(self, maybe_secret: Optional[SecretStr]) -> Optional[str]:
+        return (
+            maybe_secret.get_secret_value()
+            if isinstance(maybe_secret, SecretStr)
+            else maybe_secret
+        )
+
     def _get_database_clients(self):
         """It is Private method to get the database clients."""
         try:
-            client = CosmosClient.from_connection_string(
-                conn_str=os.getenv("AZURE_COSMOS_CONNECTION_STRING")
-            )
+            env_conn = os.getenv("AZURE_COSMOS_CONNECTION_STRING")
+            conn_str = self._unwrap_secret(self.conn_str)
+            endpoint = self._unwrap_secret(self.endpoint)
+            api_key = self._unwrap_secret(self.api_key)
+
+            client: Optional[CosmosClient] = None
+
+            if endpoint and api_key:
+                logger.debug(
+                    "Creating CosmosClient using endpoint + api_key (explicit)."
+                )
+                client = CosmosClient(endpoint, api_key)
+            elif conn_str:
+                logger.debug("Creating CosmosClient from explicit connection string.")
+                client = CosmosClient.from_connection_string(conn_str=conn_str)
+            elif env_conn:
+                logger.debug(
+                    "Creating CosmosClient from AZURE_COSMOS_CONNECTION_STRING env var."
+                )
+                client = CosmosClient.from_connection_string(conn_str=env_conn)
+            else:
+                raise ValueError(
+                    "Must provide either (api_key and endpoint) or conn_str, "
+                    "or set the 'AZURE_COSMOS_CONNECTION_STRING' environment variable."
+                )
             database = client.create_database_if_not_exists(self.database_name)
 
             container = database.create_container_if_not_exists(

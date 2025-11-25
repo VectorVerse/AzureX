@@ -1,11 +1,12 @@
 [project]
 name = "AzureX"
-version = "0.0.2a1"
+version = "0.0.2a2"
 maintainers = [{ name = "Raval Sahil", email = "ravalsahil1311@gmail.com" }]
 authors = [{ name = "Raval Sahil", email = "ravalsahil1311@gmail.com" }]
 dependencies = [
     "azure-cosmos>=4.9.0", 
-    "python-dotenv>=1.1.0"
+    "python-dotenv>=1.1.0",
+    "pydantic>=2.11.9"
 ]
 description = "AzureX is a Python library that provides a simple and efficient way to interact with Azure services."
 readme = "README.md"
